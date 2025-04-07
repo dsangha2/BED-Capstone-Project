@@ -7,7 +7,7 @@ export const findAllTasks = async (): Promise<Task[]> => {
   const snapshot = await db.collection(TASKS_COLLECTION).get();
   const tasks: Task[] = [];
   snapshot.forEach(doc => {
-    tasks.push({ id: doc.id, ...(doc.data() as Task) });
+    tasks.push({ ...(doc.data() as Task) });
   });
   return tasks;
 };

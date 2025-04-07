@@ -7,7 +7,7 @@ export const findAllUsers = async (): Promise<User[]> => {
   const snapshot = await db.collection(USERS_COLLECTION).get();
   const users: User[] = [];
   snapshot.forEach(doc => {
-    users.push({ id: doc.id, ...(doc.data() as User) });
+    users.push({ ...(doc.data() as User) });
   });
   return users;
 };

@@ -7,7 +7,7 @@ export const findAllProjects = async (): Promise<Project[]> => {
   const snapshot = await db.collection(PROJECTS_COLLECTION).get();
   const projects: Project[] = [];
   snapshot.forEach(doc => {
-    projects.push({ id: doc.id, ...(doc.data() as Project) });
+    projects.push({ ...(doc.data() as Project) });
   });
   return projects;
 };
