@@ -37,3 +37,25 @@ export const deleteTask = async (req: Request, res: Response, next: NextFunction
     next(error);
   }
 };
+
+export const attachFileToTask = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const { projectId } = req.params;
+    const file = req.file;
+    if (!file) throw new Error("No file provided");
+
+    const url = await taskService.saveTaskAttachment(
+      projectId,
+      file.originalname,
+      file.buffer
+    );
+
+    res.status(201).json(successResponse({ url }, "File uploaded"));
+  } catch (err) {
+    next(err);
+  }
+};
