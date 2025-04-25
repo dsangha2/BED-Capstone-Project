@@ -7,3 +7,5 @@ export interface Task {
     createdAt: Date;
     updatedAt: Date;
   }
+
+  export type NewTask = Omit<Task, "id" | "status" | "createdAt" | "updatedAt">;

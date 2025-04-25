@@ -1,4 +1,4 @@
-import { Task } from "../models/taskModel";
+import { Task, NewTask } from "../models/taskModel";
 import * as taskRepository from "../repositories/taskRepository";
 import { db } from "../../../../config/firebaseConfig";
 
@@ -6,8 +6,15 @@ export const fetchAllTasks = async (): Promise<Task[]> => {
   return await taskRepository.findAllTasks();
 };
 
-export const addTask = async (taskData: Omit<Task, "id">): Promise<string> => {
-  return await taskRepository.createTask(taskData);
+export const addTask = async (taskData: NewTask): Promise<string> => {
+  const now = new Date();
+  const toSave: Omit<Task, "id"> = {
+    ...taskData,
+    status: "pending",
+    createdAt: now,
+    updatedAt: now,
+  };
+  return taskRepository.createTask(toSave);
 };
 
 export const modifyTask = async (id: string, taskData: Partial<Task>): Promise<void> => {
@@ -28,6 +35,11 @@ export const saveTaskAttachment = async (
     .doc(projectId)
     .collection("attachments")
     .doc();
-  await docRef.set({ fileName, data: buffer.toString("base64"), uploadedAt: new Date() });
-  return docRef.id;
+  await docRef.set({
+    fileName,
+    data: buffer.toString("base64"),
+    uploadedAt: new Date(),
+  });
+
+  return `https://example.com/storage/${projectId}/${docRef.id}/${fileName}`;
 };
