@@ -1,11 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 import * as taskService from "../services/taskService";
 import { successResponse } from "../models/responseModel";
+import { NewTask } from "../models/taskModel";
 
 export const getAllTasks = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const tasks = await taskService.fetchAllTasks();
-    res.status(200).json(successResponse(tasks, "Tasks retrieved successfully"));
+    res.status(200).json(successResponse(tasks));
   } catch (error) {
     next(error);
   }
@@ -13,8 +14,9 @@ export const getAllTasks = async (req: Request, res: Response, next: NextFunctio
 
 export const createTask = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const newTaskId = await taskService.addTask(req.body);
-    res.status(201).json(successResponse({ id: newTaskId }, "Task created successfully"));
+    const newTaskData = req.body as NewTask;
+    const newTaskId = await taskService.addTask(newTaskData);
+    res.status(201).json(successResponse({ id: newTaskId }, "Task created"));
   } catch (error) {
     next(error);
   }
@@ -23,7 +25,7 @@ export const createTask = async (req: Request, res: Response, next: NextFunction
 export const updateTask = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     await taskService.modifyTask(req.params.id, req.body);
-    res.status(200).json(successResponse({}, "Task updated successfully"));
+    res.status(200).json(successResponse({}, "Task updated"));
   } catch (error) {
     next(error);
   }
@@ -32,7 +34,7 @@ export const updateTask = async (req: Request, res: Response, next: NextFunction
 export const deleteTask = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     await taskService.removeTask(req.params.id);
-    res.status(200).json(successResponse({}, "Task deleted successfully"));
+    res.status(200).json(successResponse({}, "Task deleted"));
   } catch (error) {
     next(error);
   }
@@ -54,7 +56,7 @@ export const attachFileToTask = async (
       file.buffer
     );
 
-    res.status(201).json(successResponse({ url }, "File uploaded"));
+    res.status(201).json(successResponse({ url }, "Uploaded"));
   } catch (err) {
     next(err);
   }
