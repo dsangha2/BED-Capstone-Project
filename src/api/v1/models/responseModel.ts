@@ -1,3 +1,19 @@
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     ApiResponse:
+ *       type: object
+ *       properties:
+ *         status:
+ *           type: string
+ *         data:
+ *           type: object
+ *         message:
+ *           type: string
+ *         error:
+ *           type: string
+ */
 export interface ApiResponse<T> {
     status: string;
     data?: T;
